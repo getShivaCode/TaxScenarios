@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { FilingStatus, getTaxScenario } from "../utils/taxData";
+import { getTaxScenario } from "../utils/taxData";
 
 const TaxTable: React.FC = () => {
   const caTaxAdjustmentPercent = useSelector(

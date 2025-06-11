@@ -1,5 +1,4 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -82,14 +81,56 @@ const TaxChart: React.FC = () => {
   const options = {
     responsive: true,
     plugins: {
-      legend: { 
+      legend: {
         position: "top" as const,
-        labels: { color: textColor },
+        labels: {
+          color: textColor,
+          usePointStyle: true,
+          pointStyle: 'rect',
+        },
       },
-      tooltip: { mode: "index" as const, intersect: false },
+      tooltip: {
+        mode: "index" as const,
+        intersect: false,
+        callbacks: {
+          label: function (context: any) {
+            let label = context.dataset.label || "";
+            if (label) {
+              label += ": ";
+            }
+            if (context.parsed.y !== null) {
+              const value = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(context.parsed.y);
+
+              if (context.dataset.label === "Savings") {
+                return `🚀 ${label}${value}`; // Add a rocket emoji for savings
+              } else if (context.dataset.label === "Net Income") {
+                return `💰 ${label}${value}`; // Add money bag for net income
+              } else if (context.dataset.label === "Adjusted Income") {
+                return `📈 ${label}${value}`; // Add chart increasing for adjusted income
+              }
+              return label + value;
+            }
+            return label;
+          },
+          title: function(tooltipItems: any) {
+            // Customize the title to show the income level for bar charts
+            const income = tooltipItems[0].label;
+            const chartTitleText = tooltipItems[0].chart.options.plugins.title.text;
+            const matchResult = chartTitleText.match(/\(Filing Status: (.*?)\)/);
+            const filingStatus = matchResult && matchResult[1] ? matchResult[1] : "N/A"; // Add null check
+
+            return `Income: ${income} (${filingStatus})`;
+          }
+        },
+      },
       title: {
         display: true,
-        text: `Net Income, Adjusted Income, and Savings vs Income (${filingStatus}, State: ${stateNames[selectedState]})`,
+        text: `Tax Scenario Chart for ${stateNames[selectedState]} (Filing Status: ${filingStatus})`,
         color: textColor,
       },
     },
