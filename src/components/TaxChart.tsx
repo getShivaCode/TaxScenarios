@@ -39,7 +39,8 @@ const TaxChart: React.FC = () => {
   const caTaxAdjustmentPercent = useSelector((state: RootState) => state.tax.caTaxAdjustmentPercent);
   const selectedState = useSelector((state: RootState) => state.tax.selectedState);
   const darkMode = useSelector((state: RootState) => state.ui.darkMode); // Get dark mode state
-  const scenarioRows = getIncomeRangeScenario(filingStatus, caTaxAdjustmentPercent, incomeRange, selectedState);
+  const employerSavingsPercent = useSelector((state: RootState) => state.tax.employerSavingsPercent);
+  const scenarioRows = getIncomeRangeScenario(filingStatus, caTaxAdjustmentPercent, incomeRange, selectedState, employerSavingsPercent);
 
   // Define colors based on dark mode
   const netIncomeColor = darkMode ? "#60a5fa" : "#0ea5e9"; // blue-400 (light) / sky-500 (light)

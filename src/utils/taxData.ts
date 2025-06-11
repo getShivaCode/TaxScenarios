@@ -454,13 +454,15 @@ export interface TaxScenarioRow {
   savings: number;
   fedTaxDiff: number;
   caTaxPlusAdjustment: number;
+  employerSavings: number;
 }
 
 export function getTaxScenario(
   income: number,
   filingStatus: FilingStatus,
   caTaxAdjustmentPercent: number,
-  stateCode: string = "CA" // Add stateCode parameter with default "CA"
+  stateCode: string = "CA", // Add stateCode parameter with default "CA"
+  employerSavingsPercent: number // Add new parameter
 ): TaxScenarioRow {
   const deduction = standardDeductions[filingStatus];
   const taxableIncome = Math.max(0, income - deduction);
@@ -468,16 +470,24 @@ export function getTaxScenario(
   const stateBrackets = allStateTaxBrackets[stateCode][filingStatus]; // Use stateCode to get brackets
   const originalStateTax = calculateTax(taxableIncome, stateBrackets);
   const netIncome = income - originalFedTax - originalStateTax;
-  const caTaxAdjustment = (caTaxAdjustmentPercent / 100) * originalStateTax; // Apply to selected state tax
+
+  // Calculate new CA tax based on adjustment percentage and employer savings split
+  const totalAdjustment = caTaxAdjustmentPercent / 100; // Convert total adjustment percentage to decimal
+  const employerShare = employerSavingsPercent / 100; // Convert employer share percentage to decimal
+
+  const caTaxAdjustment = totalAdjustment * (1 - employerShare) * originalStateTax; // Remaining portion for caTaxAdjustment
+  const employerSavings = totalAdjustment * employerShare * originalStateTax; // Portion for employer savings
+
   const newIncome = income - originalStateTax - caTaxAdjustment;
   const adjustedFedTax = calculateTax(Math.max(0, newIncome - deduction), federalBrackets[filingStatus]);
   const adjustedIncome = newIncome - adjustedFedTax;
   const savings = adjustedIncome - netIncome;
-  const fedTaxDiff = adjustedFedTax - originalFedTax;
+  const fedTaxDiff = originalFedTax - adjustedFedTax;
   const caTaxPlusAdjustment = originalStateTax + caTaxAdjustment; // This will now represent the selected state tax + adjustment
+
   return {
     originalFedTax,
-    originalCaTax: originalStateTax, // Rename to originalStateTax for clarity in return
+    originalCaTax: originalStateTax,
     netIncome,
     newIncome,
     adjustedFedTax,
@@ -485,6 +495,7 @@ export function getTaxScenario(
     savings,
     fedTaxDiff,
     caTaxPlusAdjustment,
+    employerSavings,
   };
 }
 
@@ -492,9 +503,10 @@ export function getIncomeRangeScenario(
   filingStatus: FilingStatus,
   caTaxAdjustmentPercent: number,
   incomeRange: number[],
-  stateCode: string = "CA" // Add stateCode parameter with default "CA"
+  stateCode: string = "CA", // Add stateCode parameter with default "CA"
+  employerSavingsPercent: number // Add new parameter
 ): TaxScenarioRow[] {
   return incomeRange.map((income) =>
-    getTaxScenario(income, filingStatus, caTaxAdjustmentPercent, stateCode) // Pass stateCode
+    getTaxScenario(income, filingStatus, caTaxAdjustmentPercent, stateCode, employerSavingsPercent) // Pass stateCode and employerSavingsPercent
   );
 } 

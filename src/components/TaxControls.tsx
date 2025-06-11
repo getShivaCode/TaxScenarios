@@ -4,13 +4,14 @@ import {
   setCaTaxAdjustmentPercent,
   setFilingStatus,
   setSelectedState,
+  setEmployerSavingsPercent,
   RootState,
 } from "../store";
 import { FilingStatus, stateNames } from "../utils/taxData";
 
 const TaxControls: React.FC = () => {
   const dispatch = useDispatch();
-  const { caTaxAdjustmentPercent, filingStatus, selectedState, availableStates } = useSelector(
+  const { caTaxAdjustmentPercent, filingStatus, selectedState, availableStates, employerSavingsPercent } = useSelector(
     (state: RootState) => state.tax
   );
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
@@ -18,7 +19,7 @@ const TaxControls: React.FC = () => {
   const handleCaTaxAdjustmentChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = parseInt(event.target.value, 10);
+    const value = parseFloat(event.target.value);
     if (!isNaN(value)) {
       dispatch(setCaTaxAdjustmentPercent(value));
     }
@@ -33,25 +34,17 @@ const TaxControls: React.FC = () => {
     dispatch(setSelectedState(event.target.value));
   };
 
+  const handleEmployerSavingsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      dispatch(setEmployerSavingsPercent(value));
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-4">
-      {/* CA Tax Adjustment Slider */}
-      <div className="flex flex-col">
-        <label htmlFor="caTaxAdjustment" className="text-sm font-medium mb-2">
-          State Tax Adjustment Percentage: {caTaxAdjustmentPercent}%
-        </label>
-        <input
-          type="range"
-          id="caTaxAdjustment"
-          min="0"
-          max="30"
-          step="1"
-          value={caTaxAdjustmentPercent}
-          onChange={handleCaTaxAdjustmentChange}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-sky-600"
-        />
-      </div>
-
       {/* Filing Status Dropdown */}
       <div className="flex flex-col">
         <label htmlFor="filingStatus" className="text-sm font-medium mb-2">
@@ -89,6 +82,66 @@ const TaxControls: React.FC = () => {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* State Tax Adjustment Slider */}
+      <div className="flex flex-col">
+        <label htmlFor="caTaxAdjustment" className="text-sm font-medium mb-2">
+          {selectedState} State Tax Adjustment Percentage:
+        </label>
+        <div className="flex flex-row items-center space-x-2 w-full">
+          <input
+            type="range"
+            id="caTaxAdjustment"
+            min="0"
+            max="20"
+            step="0.5"
+            value={caTaxAdjustmentPercent}
+            onChange={handleCaTaxAdjustmentChange}
+            className="w-full h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-sky-600"
+          />
+          <input
+            type="number"
+            id="caTaxAdjustmentTextBox"
+            min="0"
+            max="20"
+            step="0.5"
+            value={caTaxAdjustmentPercent.toFixed(1)}
+            onChange={handleCaTaxAdjustmentChange}
+            className={`w-18 p-1 border rounded-md shadow-sm text-right ${darkMode ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-white border-gray-300 text-gray-900"}`}
+          />
+          <span className="text-sm font-medium">%</span>
+        </div>
+      </div>
+
+      {/* Employer Savings Percentage Slider */}
+      <div className="flex flex-col">
+        <label htmlFor="employerSavings" className="text-sm font-medium mb-2">
+          Employer Share Savings Percentage: {employerSavingsPercent}%
+        </label>
+        <div className="flex flex-row items-center space-x-2 w-full">
+          <input
+            type="range"
+            id="employerSavings"
+            min="0"
+            max="100"
+            step="5"
+            value={employerSavingsPercent}
+            onChange={handleEmployerSavingsChange}
+            className="w-full h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-sky-600"
+          />
+          <input
+            type="number"
+            id="employerSavingsTextBox"
+            min="0"
+            max="100"
+            step="5"
+            value={employerSavingsPercent}
+            onChange={handleEmployerSavingsChange}
+            className={`w-18 p-1 border rounded-md shadow-sm text-right ${darkMode ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-white border-gray-300 text-gray-900"}`}
+          />
+          <span className="text-sm font-medium">%</span>
+        </div>
       </div>
     </div>
   );
