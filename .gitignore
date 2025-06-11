@@ -1,0 +1,26 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/ReactClient/node_modules
+/ReactClient/.pnp
+/ReactClient/.pnp.js
+
+# testing
+/ReactClient/coverage
+
+# production
+/ReactClient/build
+
+# misc
+.DS_Store
+/ReactClient/.env.local
+/ReactClient/.env.development.local
+/ReactClient/.env.test.local
+/ReactClient/.env.production.local
+
+/ReactClient/npm-debug.log*
+/ReactClient/yarn-debug.log*
+/ReactClient/yarn-error.log*
+
+# Generated files
+/ReactClient/src/utils/taxData.js 
