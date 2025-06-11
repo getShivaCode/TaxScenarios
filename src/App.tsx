@@ -1,24 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
+import Header from "./components/Header";
+import Body from "./components/Body";
+import Footer from "./components/Footer";
 
 function App() {
+  const darkMode = useSelector((state: RootState) => state.ui.darkMode);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`relative h-screen flex flex-col ${darkMode ? "dark" : ""}`}>
+      <Header />
+      <main className="flex-1 overflow-y-auto pt-16 pb-16">
+        <Body />
+      </main>
+      <Footer />
     </div>
   );
 }

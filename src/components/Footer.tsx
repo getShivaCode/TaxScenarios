@@ -1,0 +1,31 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { stateNames } from "../utils/taxData";
+
+const Footer: React.FC = () => {
+  const selectedState = useSelector((state: RootState) => state.tax.selectedState);
+  const darkMode = useSelector((state: RootState) => state.ui.darkMode);
+
+  return (
+    <footer
+      className={`fixed bottom-0 left-0 w-full z-50 py-4 border-t ${darkMode ? "bg-gray-900 text-gray-400 border-gray-700" : "bg-slate-100 text-slate-600"}`}
+    >
+      <div className="container mx-auto px-4 flex flex-col items-center">
+        <span className="text-sm">
+          &copy; {new Date().getFullYear()} {stateNames[selectedState]} Tax Scenario Visualizer
+        </span>
+        <a
+          href="https://www.taxfoundation.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-sm mt-2 ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"}`}
+        >
+          Data provided by Tax Foundation
+        </a>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer; 
