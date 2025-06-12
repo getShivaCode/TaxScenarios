@@ -17,7 +17,6 @@ import { RootState } from "../store";
 import {
   getIncomeRangeScenario,
   FilingStatus,
-  stateNames,
 } from "../utils/taxData";
 import { Chart } from "react-chartjs-2";
 
