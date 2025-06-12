@@ -11,7 +11,7 @@ function App() {
   return (
     <div className={`relative h-screen flex flex-col ${darkMode ? "dark" : ""}`}>
       <Header />
-      <main className="flex-1 overflow-y-auto pt-16 pb-16">
+      <main className="flex-1 overflow-y-auto pt-12 pb-16">
         <Body />
       </main>
       <Footer />

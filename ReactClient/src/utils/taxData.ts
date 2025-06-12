@@ -453,7 +453,8 @@ export interface TaxScenarioRow {
   adjustedIncome: number;
   savings: number;
   fedTaxDiff: number;
-  caTaxPlusAdjustment: number;
+  adjustedCaTax: number;
+  caTaxImpact: number;
   employerSavings: number;
 }
 
@@ -471,19 +472,36 @@ export function getTaxScenario(
   const originalStateTax = calculateTax(taxableIncome, stateBrackets);
   const netIncome = income - originalFedTax - originalStateTax;
 
-  // Calculate new CA tax based on adjustment percentage and employer savings split
-  const totalAdjustment = caTaxAdjustmentPercent / 100; // Convert total adjustment percentage to decimal
-  const employerShare = employerSavingsPercent / 100; // Convert employer share percentage to decimal
+  // Calculate the total adjustment amount based on the original state tax and adjustment percentage
+  const totalAdjustment = originalStateTax * (caTaxAdjustmentPercent / 100);
+  const caTaxAdjustment = totalAdjustment * (1 - employerSavingsPercent / 100);
+  const employerSavings = totalAdjustment * (employerSavingsPercent / 100);
 
-  const caTaxAdjustment = totalAdjustment * (1 - employerShare) * originalStateTax; // Remaining portion for caTaxAdjustment
-  const employerSavings = totalAdjustment * employerShare * originalStateTax; // Portion for employer savings
+  // Adjusted CA tax is original CA tax plus the caTaxAdjustment as per new logic
+  const adjustedCaTax = originalStateTax + caTaxAdjustment;
+  const finalAdjustedCaTax = Math.max(0, adjustedCaTax);
 
-  const newIncome = income - originalStateTax - caTaxAdjustment;
-  const adjustedFedTax = calculateTax(Math.max(0, newIncome - deduction), federalBrackets[filingStatus]);
-  const adjustedIncome = newIncome - adjustedFedTax;
-  const savings = adjustedIncome - netIncome;
-  const fedTaxDiff = originalFedTax - adjustedFedTax;
-  const caTaxPlusAdjustment = originalStateTax + caTaxAdjustment; // This will now represent the selected state tax + adjustment
+  // NEW LOGIC: New income after total adjustment (before federal tax calculation) = Original Income - current CA tax - total adjustment
+  const incomeAfterTotalAdjustment = income - originalStateTax - totalAdjustment;
+
+  // Adjusted federal taxable income accounts for the new income after total adjustment and standard deduction
+  const adjustedFedTaxableIncome = Math.max(0, incomeAfterTotalAdjustment - deduction);
+  const adjustedFedTax = calculateTax(adjustedFedTaxableIncome, federalBrackets[filingStatus]);
+
+  // Adjusted net income is the new income after total adjustment minus adjusted federal tax
+  const adjustedNetIncome = incomeAfterTotalAdjustment - adjustedFedTax;
+
+  // Savings is the difference between adjusted net income and original net income
+  const savings = adjustedNetIncome - netIncome;
+
+  // Federal tax impact is adjusted federal tax minus original federal tax (negative means less tax paid, i.e. savings)
+  const fedTaxDiff = adjustedFedTax - originalFedTax;
+
+  // CA tax impact is the portion of total adjustment allocated to state tax reduction
+  const caTaxImpact = caTaxAdjustment;
+
+  // The 'newIncome' field in the returned object should reflect income after total adjustment
+  const newIncome = incomeAfterTotalAdjustment;
 
   return {
     originalFedTax,
@@ -491,10 +509,11 @@ export function getTaxScenario(
     netIncome,
     newIncome,
     adjustedFedTax,
-    adjustedIncome,
+    adjustedIncome: adjustedNetIncome,
     savings,
     fedTaxDiff,
-    caTaxPlusAdjustment,
+    adjustedCaTax: finalAdjustedCaTax,
+    caTaxImpact,
     employerSavings,
   };
 }

@@ -10,6 +10,7 @@ import {
   Tooltip,
   Title,
   LineController,
+  BarController,
 } from "chart.js";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -29,7 +30,8 @@ ChartJS.register(
   Legend,
   Tooltip,
   Title,
-  LineController
+  LineController,
+  BarController
 );
 
 const incomeRange = Array.from({ length: 10 }, (_, i) => 100000 + i * 100000); // $100k to $1M
@@ -58,12 +60,16 @@ const TaxChart: React.FC = () => {
         label: "Net Income",
         data: scenarioRows.map((row) => row.netIncome),
         backgroundColor: netIncomeColor,
+        categoryPercentage: 0.75,
+        barPercentage: 0.75,
       },
       {
         type: "bar" as const,
         label: "Adjusted Income",
         data: scenarioRows.map((row) => row.adjustedIncome),
         backgroundColor: adjustedIncomeColor,
+        categoryPercentage: 0.75,
+        barPercentage: 0.75,
       },
       {
         type: "line" as const,
@@ -131,7 +137,7 @@ const TaxChart: React.FC = () => {
       },
       title: {
         display: true,
-        text: `Tax Scenario Chart for ${stateNames[selectedState]} (Filing Status: ${filingStatus})`,
+        text: `Impact of State Tax Adjustment to Annual Net Income (Filing Status: ${filingStatus})`,
         color: textColor,
       },
     },
@@ -139,18 +145,31 @@ const TaxChart: React.FC = () => {
       x: {
         ticks: { color: textColor },
         grid: { color: gridColor },
+        categoryPercentage: 0.75,
+        barPercentage: 0.75,
+        title: { display: true, text: "Current Annual Salary ($)", color: textColor },
       },
       y: {
         beginAtZero: false,
-        title: { display: true, text: "Income ($)", color: textColor },
-        ticks: { color: textColor },
+        title: { display: true, text: "Annual Net Income ($)", color: textColor },
+        ticks: {
+          color: textColor,
+          callback: function (value: string | number) {
+            return `$${(value as number) / 1000}k`;
+          },
+        },
         grid: { color: gridColor },
       },
       y1: {
         position: "right" as const,
         grid: { drawOnChartArea: false, color: gridColor },
-        title: { display: true, text: "Savings ($)", color: textColor },
-        ticks: { color: textColor },
+        title: { display: true, text: "Annual Savings ($)", color: textColor },
+        ticks: {
+          color: textColor,
+          callback: function (value: string | number) {
+            return `$${(value as number) / 1000}k`;
+          },
+        },
       },
     },
     // Chart background color

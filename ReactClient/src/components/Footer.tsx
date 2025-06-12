@@ -9,17 +9,17 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className={`fixed bottom-0 left-0 w-full z-50 py-4 border-t ${darkMode ? "bg-gray-900 text-gray-400 border-gray-700" : "bg-slate-100 text-slate-600"}`}
+      className={`fixed bottom-0 left-0 w-full z-50 py-3 border-t ${darkMode ? "bg-gray-900 text-gray-400 border-gray-700" : "bg-slate-100 text-slate-600"}`}
     >
       <div className="container mx-auto px-4 flex flex-col items-center">
-        <span className="text-sm">
+        <span className="text-xs">
           &copy; {new Date().getFullYear()} {stateNames[selectedState]} Tax Scenario Visualizer
         </span>
         <a
           href="https://www.taxfoundation.org/"
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-sm mt-2 ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"}`}
+          className={`text-xs mt-2 ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"}`}
         >
           Data provided by Tax Foundation
         </a>

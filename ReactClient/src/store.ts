@@ -7,6 +7,7 @@ interface TaxState {
   selectedState: string;
   availableStates: string[];
   employerSavingsPercent: number;
+  currentAnnualSalary: number;
 }
 
 interface UIState {
@@ -19,6 +20,7 @@ const initialTaxState: TaxState = {
   selectedState: "CA", // Default to California
   availableStates: ["CA", "HI", "NY", "NJ", "OR", "MN", "DC", "VT", "IA", "WI"], // Top 10 states
   employerSavingsPercent: 50, // Default to 50%
+  currentAnnualSalary: 150000, // Default to 150000
 };
 
 const initialUIState: UIState = {
@@ -47,6 +49,12 @@ const taxSlice = createSlice({
     ) {
       state.employerSavingsPercent = action.payload;
     },
+    setCurrentAnnualSalary(
+      state,
+      action: PayloadAction<number>
+    ) {
+      state.currentAnnualSalary = action.payload;
+    },
   },
 });
 
@@ -65,6 +73,7 @@ export const {
   setFilingStatus,
   setSelectedState,
   setEmployerSavingsPercent,
+  setCurrentAnnualSalary,
 } = taxSlice.actions;
 export const { toggleDarkMode } = uiSlice.actions;
 

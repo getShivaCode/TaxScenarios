@@ -38,7 +38,7 @@ const TaxTable: React.FC = () => {
       adjustedNetIncome: Math.round(scenario.adjustedIncome),
       taxSavings: Math.round(scenario.savings),
       federalTaxImpact: Math.round(scenario.fedTaxDiff),
-      stateTaxPlusAdjustment: Math.round(scenario.caTaxPlusAdjustment),
+      stateTaxImpact: Math.round(scenario.caTaxImpact),
       employerSavings: Math.round(scenario.employerSavings),
     };
   });
@@ -53,7 +53,7 @@ const TaxTable: React.FC = () => {
     "NET INCOME",
     "TAX SAVINGS",
     "FEDERAL TAX IMPACT",
-    `${selectedState} TAX + ADJ.`,
+    `Impact to ${selectedState} Tax`,
     "EMPLOYER SAVINGS",
   ];
 
@@ -68,7 +68,7 @@ const TaxTable: React.FC = () => {
           <tr>
             {headers.map((header, index) => (
               <th
-                key={header}
+                key={`${header}-${index}`}
                 scope="col"
                 className={`w-1/10 px-1 py-3 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? (index < 4 ? "bg-blue-900" : "bg-indigo-700") + " text-gray-100 border-gray-600" : (index < 4 ? "bg-gray-200" : "bg-gray-300") + " text-gray-500 border-gray-300"}`}>
                 {header}
@@ -110,7 +110,7 @@ const TaxTable: React.FC = () => {
                 ${row.federalTaxImpact.toLocaleString()}
               </td>
               <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
-                ${row.stateTaxPlusAdjustment.toLocaleString()}
+                ${row.stateTaxImpact.toLocaleString()}
               </td>
               <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.employerSavings.toLocaleString()}

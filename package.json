@@ -1,0 +1,15 @@
+{
+  "name": "tax-app-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for tax application client and server",
+  "main": "index.js",
+  "scripts": {
+    "build:client": "npm run build --prefix ReactClient",
+    "build:server": "npm run build --prefix server",
+    "start:server:prod": "npm run build:client && npm run build:server && NODE_ENV=production npm run serve --prefix server",
+    "start:client": "npm start --prefix ReactClient"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+} 

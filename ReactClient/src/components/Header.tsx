@@ -10,9 +10,9 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 p-4 shadow-md flex items-center justify-between ${darkMode ? "bg-blue-900 text-gray-100" : "bg-sky-600 text-white"}`}
+      className={`fixed top-0 left-0 w-full z-50 py-2 pl-16 shadow-md flex items-center justify-between ${darkMode ? "bg-blue-900 text-gray-100" : "bg-sky-600 text-white"}`}
     >
-      <h1 className="text-2xl font-bold">
+      <h1 className="text-xl font-bold">
         Tax Scenario Analysis - {stateNames[selectedState]}
       </h1>
       <button
