@@ -6,6 +6,7 @@ import SalaryAnalysis from "./SalaryAnalysis";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { stateNames, stateLandmarkImages } from "../utils/taxData";
+import { getFlagFile } from "../utils/taxData";
 
 const Body: React.FC = () => {
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
@@ -48,7 +49,14 @@ const Body: React.FC = () => {
       </div>
       {/* Table at the bottom */}
       <div className={`mt-0 mx-1 rounded-lg shadow relative z-10 w-80% px-4 py-4 ${darkMode ? "bg-gray-800 bg-opacity-80" : "bg-white bg-opacity-80"}`}>
-        <div className={`font-semibold text-lg mb-4 ${darkMode ? "text-gray-100" : ""}`}>Tax Scenario Table for {stateNames[selectedState]}</div>
+        <div className={`font-semibold text-lg mb-4 ${darkMode ? "text-gray-100" : ""}`}>Tax Scenario Table for {stateNames[selectedState]}
+          <img
+            src={`/images/flags/${getFlagFile(selectedState)}`}
+            alt={`${stateNames[selectedState]} flag`}
+            className="ml-2 h-3 w-auto object-contain"
+            style={{ display: 'inline-block', verticalAlign: 'middle' }}
+          />
+        </div>
         <TaxTable />
       </div>
     </div>

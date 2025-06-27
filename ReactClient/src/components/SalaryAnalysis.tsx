@@ -52,6 +52,7 @@ const SalaryAnalysis: React.FC = () => {
   const federalTaxImpact = Math.round(scenario.fedTaxDiff);
   const employerSavingsAmount = Math.round(scenario.employerSavings);
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
+  const showFederalTaxImpact = useSelector((state: RootState) => state.ui.showFederalTaxImpact);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -111,13 +112,15 @@ const SalaryAnalysis: React.FC = () => {
           <span className="font-medium">${caTaxImpact.toLocaleString()}</span>
         </div>
         <div className="flex justify-between text-sm mb-1">
-          <span>Impact to IRS:</span>
-          <span className="font-medium">${federalTaxImpact.toLocaleString()}</span>
-        </div>
-        <div className="flex justify-between text-sm mb-1">
           <span>Impact to Employer:</span>
           <span className="font-medium">${employerSavingsAmount.toLocaleString()}</span>
         </div>
+        {showFederalTaxImpact && (
+          <div className="flex justify-between text-sm mb-1">
+            <span>Impact to IRS:</span>
+            <span className="font-medium">${federalTaxImpact.toLocaleString()}</span>
+          </div>
+        )}
         <div className="flex justify-between text-sm mb-1">
           <span>State:</span>
           <span className="font-medium">{stateNames[selectedState]}</span>

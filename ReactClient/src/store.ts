@@ -12,19 +12,21 @@ interface TaxState {
 
 interface UIState {
   darkMode: boolean;
+  showFederalTaxImpact: boolean;
 }
 
 const initialTaxState: TaxState = {
-  caTaxAdjustmentPercent: 10, // Default to 10%
+  caTaxAdjustmentPercent: 0, // Default to 0%
   filingStatus: "Single", // Default to Single
   selectedState: "CA", // Default to California
   availableStates: ["CA", "HI", "NY", "NJ", "OR", "MN", "DC", "VT", "IA", "WI"], // Top 10 states
-  employerSavingsPercent: 50, // Default to 50%
-  currentAnnualSalary: 150000, // Default to 150000
+  employerSavingsPercent: 0, // Default to 0%
+  currentAnnualSalary: 300000, // Default to 300000
 };
 
 const initialUIState: UIState = {
   darkMode: true,
+  showFederalTaxImpact: false,
 };
 
 const taxSlice = createSlice({
@@ -65,6 +67,9 @@ const uiSlice = createSlice({
     toggleDarkMode(state) {
       state.darkMode = !state.darkMode;
     },
+    toggleShowFederalTaxImpact(state) {
+      state.showFederalTaxImpact = !state.showFederalTaxImpact;
+    },
   },
 });
 
@@ -75,7 +80,10 @@ export const {
   setEmployerSavingsPercent,
   setCurrentAnnualSalary,
 } = taxSlice.actions;
-export const { toggleDarkMode } = uiSlice.actions;
+export const {
+  toggleDarkMode,
+  toggleShowFederalTaxImpact,
+} = uiSlice.actions;
 
 const store = configureStore({
   reducer: {

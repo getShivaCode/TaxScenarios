@@ -11,6 +11,7 @@ const TaxTable: React.FC = () => {
   const selectedState = useSelector((state: RootState) => state.tax.selectedState);
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
   const employerSavingsPercent = useSelector((state: RootState) => state.tax.employerSavingsPercent);
+  const showFederalTaxImpact = useSelector((state: RootState) => state.ui.showFederalTaxImpact);
 
   const incomeRange = [
     100000,
@@ -52,10 +53,13 @@ const TaxTable: React.FC = () => {
     "FEDERAL TAX OWED",
     "NET INCOME",
     "TAX SAVINGS",
-    "FEDERAL TAX IMPACT",
+    ...(showFederalTaxImpact ? ["FEDERAL TAX IMPACT"] : []),
     `Impact to ${selectedState} Tax`,
     "EMPLOYER SAVINGS",
   ];
+
+  const numCols = headers.length;
+  const colWidthClass = `w-[${100 / numCols}%]`;
 
   return (
     <div className="overflow-x-auto">
@@ -63,14 +67,15 @@ const TaxTable: React.FC = () => {
         <thead className={`${darkMode ? "bg-blue-900 text-gray-100" : "bg-gray-200"}`}>
           <tr>
             <th colSpan={4} className={`px-1 py-2 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? "bg-blue-900 text-gray-100 border-gray-600" : "bg-gray-200 text-gray-500 border-gray-300"}`}>ORIGINAL</th>
-            <th colSpan={7} className={`px-1 py-2 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? "bg-indigo-700 text-gray-100 border-gray-600" : "bg-gray-300 text-gray-500 border-gray-300"}`}>AFTER ADJUSTMENT</th>
+            <th colSpan={numCols - 4} className={`px-1 py-2 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? "bg-indigo-700 text-gray-100 border-gray-600" : "bg-gray-300 text-gray-500 border-gray-300"}`}>AFTER ADJUSTMENT</th>
           </tr>
           <tr>
             {headers.map((header, index) => (
               <th
                 key={`${header}-${index}`}
                 scope="col"
-                className={`w-1/10 px-1 py-3 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? (index < 4 ? "bg-blue-900" : "bg-indigo-700") + " text-gray-100 border-gray-600" : (index < 4 ? "bg-gray-200" : "bg-gray-300") + " text-gray-500 border-gray-300"}`}>
+                className={`${colWidthClass} px-1 py-3 text-center text-xs uppercase border whitespace-normal break-words overflow-hidden ${darkMode ? (index < 4 ? "bg-blue-900" : "bg-indigo-700") + " text-gray-100 border-gray-600" : (index < 4 ? "bg-gray-200" : "bg-gray-300") + " text-gray-500 border-gray-300"}`}
+              >
                 {header}
               </th>
             ))}
@@ -82,37 +87,39 @@ const TaxTable: React.FC = () => {
               key={row.income}
               className={`${index % 2 === 0 ? (darkMode ? "bg-gray-800" : "bg-gray-100") : (darkMode ? "bg-gray-700" : "bg-gray-200")} ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-300"}`}
             >
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.income.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.originalFedTax.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.originalStateTax.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.netIncomeOriginal.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.adjustedIncomePostStateTax.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.adjustedFedTax.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.adjustedNetIncome.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.taxSavings.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
-                ${row.federalTaxImpact.toLocaleString()}
-              </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              {showFederalTaxImpact && (
+                <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+                  ${row.federalTaxImpact.toLocaleString()}
+                </td>
+              )}
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.stateTaxImpact.toLocaleString()}
               </td>
-              <td className={`w-1/10 px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
+              <td className={`${colWidthClass} px-1 py-2 text-right text-xs overflow-hidden ${darkMode ? "border-gray-600 text-gray-100" : "border-gray-300"} border`}>
                 ${row.employerSavings.toLocaleString()}
               </td>
             </tr>

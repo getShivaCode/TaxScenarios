@@ -412,7 +412,7 @@ export const stateNames: Record<string, string> = {
   NJ: "New Jersey",
   OR: "Oregon",
   MN: "Minnesota",
-  DC: "District of Columbia",
+  DC: "Washington DC",
   VT: "Vermont",
   IA: "Iowa",
   WI: "Wisconsin",
@@ -528,4 +528,20 @@ export function getIncomeRangeScenario(
   return incomeRange.map((income) =>
     getTaxScenario(income, filingStatus, caTaxAdjustmentPercent, stateCode, employerSavingsPercent) // Pass stateCode and employerSavingsPercent
   );
+}
+
+export function getFlagFile(stateCode: string): string {
+  const map: Record<string, string> = {
+    CA: 'california.svg',
+    HI: 'hawaii.svg',
+    NY: 'new_york.svg',
+    NJ: 'new_jersey.svg',
+    OR: 'oregon.svg',
+    MN: 'minnesota.svg',
+    DC: 'district_of_columbia.svg',
+    VT: 'vermont.svg',
+    IA: 'iowa.svg',
+    WI: 'wisconsin.svg',
+  };
+  return map[stateCode] || 'california.svg';
 } 
