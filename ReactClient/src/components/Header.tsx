@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, toggleDarkMode, toggleShowFederalTaxImpact } from "../store";
 import { stateNames } from "../utils/taxData";
+import "./Header.css";
 
 const Header: React.FC = () => {
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
@@ -45,11 +46,7 @@ const Header: React.FC = () => {
             </svg>
           </span>
           <span className="flex ml-2">
-            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">S</span>
-            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">H</span>
-            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">I</span>
-            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">V</span>
-            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">A</span>
+            <span className="font-extrabold text-2xl tracking-widest text-sky-400 dark:text-blue-200">SHIVA</span>
           </span>
           <span className="font-bold text-white dark:text-gray-100 ml-4">
             Save Honest Income's Value Act: {stateNames[selectedState]}
@@ -122,25 +119,4 @@ function getFlagUrl(stateCode: string) {
     WI: 'wisconsin.svg',
   };
   return `/images/flags/${map[stateCode] || 'california.svg'}`;
-}
-
-// Add fluttering animation CSS
-const style = document.createElement('style');
-style.innerHTML = `
-.flutter-flag {
-  animation: flutter 1.5s infinite linear alternate;
-  transform-origin: left center;
-}
-@keyframes flutter {
-  0% { transform: rotateZ(-3deg) scaleY(1.02); }
-  20% { transform: rotateZ(2deg) scaleY(0.98); }
-  40% { transform: rotateZ(-2deg) scaleY(1.01); }
-  60% { transform: rotateZ(1deg) scaleY(0.99); }
-  80% { transform: rotateZ(-1deg) scaleY(1.01); }
-  100% { transform: rotateZ(0deg) scaleY(1); }
-}
-`;
-if (typeof window !== 'undefined' && !document.getElementById('flutter-flag-style')) {
-  style.id = 'flutter-flag-style';
-  document.head.appendChild(style);
 } 

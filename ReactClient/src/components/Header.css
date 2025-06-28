@@ -1,0 +1,13 @@
+/* Flutter flag animation for Header component */
+.flutter-flag {
+  animation: flutter 1.5s infinite linear alternate;
+  transform-origin: left center;
+}
+@keyframes flutter {
+  0% { transform: rotateZ(-3deg) scaleY(1.02); }
+  20% { transform: rotateZ(2deg) scaleY(0.98); }
+  40% { transform: rotateZ(-2deg) scaleY(1.01); }
+  60% { transform: rotateZ(1deg) scaleY(0.99); }
+  80% { transform: rotateZ(-1deg) scaleY(1.01); }
+  100% { transform: rotateZ(0deg) scaleY(1); }
+} 
