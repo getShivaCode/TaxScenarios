@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { stateNames, stateLandmarkImages } from "../utils/taxData";
 import { getFlagFile } from "../utils/taxData";
+import SankeyRow from "./SankeyRow";
 
 const Body: React.FC = () => {
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
@@ -46,6 +47,10 @@ const Body: React.FC = () => {
           <div className={`font-semibold text-lg mb-4 ${darkMode ? "text-gray-100" : ""}`}>Salary Analysis</div>
           <SalaryAnalysis />
         </div>
+      </div>
+      <div className={`mt-0 mx-4 rounded-lg shadow relative z-10 w-80% px-4 py-4`}>
+        {/* Sankey charts row */}
+        <SankeyRow />
       </div>
       {/* Table at the bottom */}
       <div className={`mt-0 mx-1 rounded-lg shadow relative z-10 w-80% px-4 py-4 ${darkMode ? "bg-gray-800 bg-opacity-80" : "bg-white bg-opacity-80"}`}>
