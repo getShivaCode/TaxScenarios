@@ -9,7 +9,7 @@ import {
 } from "../store";
 import { FilingStatus, stateNames } from "../utils/taxData";
 
-const TaxControls: React.FC = () => {
+const TaxControls: React.FC<{ showStateDropdown?: boolean }> = ({ showStateDropdown = false }) => {
   const dispatch = useDispatch();
   const { caTaxAdjustmentPercent, filingStatus, selectedState, availableStates, employerSavingsPercent } = useSelector(
     (state: RootState) => state.tax
@@ -58,29 +58,8 @@ const TaxControls: React.FC = () => {
         >
           <option value="Single">Single</option>
           <option value="Married Filing Jointly">Married Filing Jointly</option>
-          <option value="Married Filing Separately">
-            Married Filing Separately
-          </option>
           <option value="Head of Household">Head of Household</option>
-        </select>
-      </div>
-
-      {/* State Dropdown */}
-      <div className="flex flex-col">
-        <label htmlFor="stateSelect" className="text-sm font-medium mb-2">
-          Select State:
-        </label>
-        <select
-          id="stateSelect"
-          value={selectedState}
-          onChange={handleStateChange}
-          className={`p-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${darkMode ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-white border-gray-300"}`}
-        >
-          {availableStates.map((stateCode: string) => (
-            <option key={stateCode} value={stateCode}>
-              {stateNames[stateCode]}
-            </option>
-          ))}
+          <option value="Married Filing Separately">Married Filing Separately</option>
         </select>
       </div>
 
@@ -113,6 +92,27 @@ const TaxControls: React.FC = () => {
           <span className="text-sm font-medium">%</span>
         </div>
       </div>
+
+      {/* State Dropdown */}
+      {showStateDropdown && (
+        <div className="flex flex-col">
+          <label htmlFor="stateSelect" className="text-sm font-medium mb-2">
+            Select State:
+          </label>
+          <select
+            id="stateSelect"
+            value={selectedState}
+            onChange={handleStateChange}
+            className={`p-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${darkMode ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-white border-gray-300"}`}
+          >
+            {availableStates.map((stateCode: string) => (
+              <option key={stateCode} value={stateCode}>
+                {stateNames[stateCode]}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Employer Savings Percentage Slider */}
       <div className="flex flex-col">

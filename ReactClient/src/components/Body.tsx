@@ -13,6 +13,11 @@ const Body: React.FC = () => {
   const darkMode = useSelector((state: RootState) => state.ui.darkMode);
   const selectedState = useSelector((state: RootState) => state.tax.selectedState);
 
+  const [showStateDropdown, setShowStateDropdown] = React.useState(false);
+
+  // Expose a handler to toggle the dropdown (to be called from Header)
+  (window as any).toggleStateDropdown = () => setShowStateDropdown((prev: boolean) => !prev);
+
   const backgroundImage = stateLandmarkImages[selectedState];
 
   return (
@@ -20,7 +25,7 @@ const Body: React.FC = () => {
       className="relative flex-1"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: '100% auto',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
@@ -35,7 +40,7 @@ const Body: React.FC = () => {
         {/* Left: Controls */}
         <div className={`md:w-1/4 w-full rounded-lg shadow p-6 mb-6 md:mb-0 ${darkMode ? "bg-gray-800 text-gray-100 bg-opacity-80" : "bg-white bg-opacity-80"}`}>
           <div className="font-semibold text-lg mb-4">Adjust {stateNames[selectedState]} Tax & Filing Status</div>
-          <TaxControls />
+          <TaxControls showStateDropdown={showStateDropdown} />
         </div>
         {/* Middle: Chart */}
         <div className={`md:w-1/2 w-full rounded-lg shadow p-6 ${darkMode ? "bg-gray-800 bg-opacity-80" : "bg-white bg-opacity-80"}`}>

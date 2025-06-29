@@ -55,6 +55,15 @@ const Header: React.FC = () => {
               alt={`${stateNames[selectedState]} flag`}
               className="ml-2 h-3 w-auto object-contain flutter-flag"
               style={{ display: 'inline-block', verticalAlign: 'middle' }}
+              tabIndex={0}
+              role="button"
+              aria-label="Toggle Select State Dropdown"
+              onClick={() => (window as any).toggleStateDropdown && (window as any).toggleStateDropdown()}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  (window as any).toggleStateDropdown && (window as any).toggleStateDropdown();
+                }
+              }}
             />
           </span>
         </h1>

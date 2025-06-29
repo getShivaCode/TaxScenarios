@@ -17,7 +17,7 @@ interface UIState {
 
 const initialTaxState: TaxState = {
   caTaxAdjustmentPercent: 0, // Default to 0%
-  filingStatus: "Single", // Default to Single
+  filingStatus: "Married Filing Jointly", // Default to Married Filing Jointly
   selectedState: "CA", // Default to California
   availableStates: ["CA", "HI", "NY", "NJ", "OR", "MN", "DC", "VT", "IA", "WI"], // Top 10 states
   employerSavingsPercent: 0, // Default to 0%

@@ -15,14 +15,26 @@ const Footer: React.FC = () => {
         <span className="text-xs">
           &copy; {new Date().getFullYear()} {stateNames[selectedState]} Tax Scenario Visualizer
         </span>
-        <a
-          href="https://www.taxfoundation.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`text-xs mt-2 ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"}`}
-        >
-          Data provided by Tax Foundation
-        </a>
+        <span className="text-xs mt-2">
+          IRS & {stateNames[selectedState]} State Tax Data, based on 2024 information from 
+          <a
+            href="https://www.taxfoundation.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={darkMode ? "text-blue-400 hover:text-blue-300 underline ml-1" : "text-blue-600 hover:text-blue-800 underline ml-1"}
+          >
+            Tax Foundation
+          </a>
+          {" extracted by "}
+          <a
+            href="https://www.cursor.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={darkMode ? "text-blue-400 hover:text-blue-300 underline" : "text-blue-600 hover:text-blue-800 underline"}
+          >
+            Cursor AI
+          </a>
+        </span>
       </div>
     </footer>
   );

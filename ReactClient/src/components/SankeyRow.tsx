@@ -27,6 +27,7 @@ const SankeyRow: React.FC = () => {
         (state: RootState) => state.tax
     );
     const darkMode = useSelector((state: RootState) => state.ui.darkMode);
+    const showFederalTaxImpact = useSelector((state: RootState) => state.ui.showFederalTaxImpact);
 
     // Get scenario values from SalaryAnalysis logic
     // Import getTaxScenario from utils/taxData
@@ -55,23 +56,20 @@ const SankeyRow: React.FC = () => {
     //const caTaxImpact = Math.round(scenario.caTaxImpact);
     const adjustedCaTax = Math.round(scenario.adjustedCaTax);
 
+    // --- Savings & Percentage Calculations for all 5 fields ---
+    // 1. Employee Salary Adjustment
+    const employeeSalaryChange = newIncome - salary;
 
-    // Example scenario data structure for reference
-    /*
-    {
-      "originalFedTax": 70263.5,
-      "originalCaTax": 23084.269,
-      "netIncome": 206652.231,
-      "newIncome": 276569.466965,
-      "adjustedFedTax": 62062.81343775001,
-      "adjustedIncome": 214506.65352725002,
-      "savings": 7854.422527250019,
-      "fedTaxDiff": -8200.68656224999,
-      "adjustedCaTax": 23430.533035,
-      "caTaxImpact": 346.264035,
-      "employerSavings": 0
-    }
-    */
+    // 2. Federal Tax
+    const fedTaxSavings = adjustedFedTax - fedTax;
+    const fedTaxSavingsPct = fedTax !== 0 ? (fedTaxSavings / fedTax) * 100 : 0;
+
+    // 3. State Tax
+    const stateTaxSavings = adjustedCaTax - stateTax;
+
+    // 4. Net Income
+    const netIncomeSavings = adjustedIncome - netIncome;
+    const netIncomeSavingsPct = netIncome !== 0 ? (netIncomeSavings / netIncome) * 100 : 0;
 
     // Helper to format numbers with commas
     const formatNumber = (num: number) => num.toLocaleString();
@@ -79,26 +77,33 @@ const SankeyRow: React.FC = () => {
     // Build node labels with values for Sankey 1
     const employerLabel = `Employer\n$${formatNumber(salary)}`;
     const employeeLabel = `Employee\n$${formatNumber(salary)}`;
-    const irsLabel = `IRS\n$${formatNumber(fedTax)}`;
-    const stateLabel = `${stateNames[selectedState]}\n$${formatNumber(stateTax)}`;
+    const irsLabel = `IRS: $${formatNumber(fedTax)}`;
+    const stateLabel = `${stateNames[selectedState]}: $${formatNumber(stateTax)}`;
     const netIncomeLabel = `Net Income\n$${formatNumber(netIncome)}`;
 
     // Build node labels with values for Sankey 2
-    const employeeCessLabel = `Employee\n$${formatNumber(newIncome)}`;;
-    const employerCessLabel = `Employer\n$${formatNumber(salary - employerSavings)}`;
-    const stateCessLabel = `${stateNames[selectedState]}\n$${formatNumber(adjustedCaTax)}`;
-    const irsCessLabel = `IRS\n$${formatNumber(adjustedFedTax)}`;
-    const netIncomeCessLabel = `Net Income\n$${formatNumber(adjustedIncome)}`;
+    var employerCessLabel = `Employer\n$${formatNumber(salary - employerSavings)}`;
+    if (employerSavings) employerCessLabel += `\nSaves $${formatNumber(Math.round(employerSavings))}`;
 
-    // Define colors based on dark mode to match TaxChart
-    const textColor = darkMode ? "#e2e8f0" : "#475569"; // slate-200 / slate-700
+    var employeeCessLabel = `Employee\n$${formatNumber(newIncome)}`;
+    employeeCessLabel += `\n${selectedState} Income Tax Exempt`;
+    
+    var stateCessLabel = `${stateNames[selectedState]}: $${formatNumber(adjustedCaTax)}`;
+    if (stateTaxSavings) stateCessLabel += `\nGains $${formatNumber(Math.round(stateTaxSavings))}`;
+
+    var irsCessLabel = `IRS: $${formatNumber(adjustedFedTax)}`;
+    if (showFederalTaxImpact && fedTaxSavings) {
+        irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
+    }
+    var netIncomeCessLabel = `Net Income\n$${formatNumber(adjustedIncome)}`;
+    netIncomeCessLabel += `\nSaves $${formatNumber(Math.round(netIncomeSavings))} ( ${Math.round(netIncomeSavingsPct)}%)`;
 
     // Simple color map by node name
-    const colors = {
-        'Employer': '#0e55e9',
+    const colors: Record<string, string> = {
+        'Employer': 'blue',
         'Employee': '#9366f1',
-        'IRS': '#f82121',
-        [stateNames[selectedState]]: '#db5124',
+        'IRS': 'red',
+        [stateNames[selectedState]]: 'orange',
         'Net Income': '#1ade50',
     };
 
@@ -127,58 +132,47 @@ const SankeyRow: React.FC = () => {
         [stateNames[selectedState]]: stateCessLabel,
         'Net Income': netIncomeCessLabel,
     }
-    // Sankey 1: Employer → Employee → IRS/State/Net Income
-    const data1 = {
+
+    // Factory function for Sankey data
+    const createSankeyData = (
+        data: Array<{ from: string; to: string; flow: number }>,
+        labels: Record<string, string>
+    ) => ({
         datasets: [
             {
-                label: 'My Sankey',
-                data: [
-                    { from: 'Employer', to: 'Employee', flow: salary },
-                    { from: 'Employee', to: 'IRS', flow: fedTax },
-                    { from: 'Employee', to: stateNames[selectedState], flow: stateTax },
-                    { from: 'Employee', to: 'Net Income', flow: netIncome },
-                ],
-                labels: labels1,
+                data,
+                labels,
                 priority: priority,
-                colorFrom: (c: any) => colors[c.dataset.data[c.dataIndex].from],
-                colorTo: (c: any) => colors[c.dataset.data[c.dataIndex].to],
+                colorFrom: (c: { dataset: { data: Array<{ from: string; to: string; flow: number }> }, dataIndex: number }) => colors[(c.dataset.data[c.dataIndex].from as string)],
+                colorTo: (c: { dataset: { data: Array<{ from: string; to: string; flow: number }> }, dataIndex: number }) => colors[(c.dataset.data[c.dataIndex].to as string)],
                 colorMode: 'to',
                 nodeWidth: 15,
                 borderWidth: 0,
                 nodePadding: 400,
-                alpha: .8,
+                alpha: darkMode?0.5:0.4, 
             }
         ],
-    };
+    });
+
+    // Sankey 1: Employer → Employee → IRS/State/Net Income
+    const data1 = [
+        { from: 'Employer', to: 'Employee', flow: salary },
+        { from: 'Employee', to: 'IRS', flow: fedTax },
+        { from: 'Employee', to: stateNames[selectedState], flow: stateTax },
+        { from: 'Employee', to: 'Net Income', flow: netIncome },
+    ];
+
+    // Sankey 2: Employer → Employee/State, Employee → IRS/Net Income
+    const data2 = [
+        { from: 'Employer', to: 'Employee', flow: newIncome },
+        { from: 'Employer', to: `${stateNames[selectedState]}`, flow: adjustedCaTax },
+        { from: 'Employee', to: 'IRS', flow: adjustedFedTax },
+        { from: 'Employee', to: 'Net Income', flow: adjustedIncome },
+    ];
 
     // Sankey chart options with node label callback
     const options = {
-        textColor: textColor,
-        backgroundColor: darkMode ? "#1e293b" : "#ffffff",
-        spriteText: false,
-    };
-
-    // Sankey 2: Employer → Employee/State, Employee → IRS/Net Income
-    const data2 = {
-        datasets: [
-            {
-                data: [
-                    { from: 'Employer', to: 'Employee', flow: newIncome },
-                    { from: 'Employer', to: `${stateNames[selectedState]}`, flow: adjustedCaTax },
-                    { from: 'Employee', to: 'IRS', flow: adjustedFedTax },
-                    { from: 'Employee', to: 'Net Income', flow: adjustedIncome },
-                ],
-                labels: labels2,
-                priority: priority,
-                colorFrom: (c: any) => colors[c.dataset.data[c.dataIndex].from],
-                colorTo: (c: any) => colors[c.dataset.data[c.dataIndex].to],
-                colorMode: 'to',
-                nodeWidth: 15,
-                borderWidth: 0,
-                nodePadding: 400,
-                alpha: .8,
-            },
-        ],
+        spriteText: true,
     };
 
     // Defensive checks for required values
@@ -205,21 +199,25 @@ const SankeyRow: React.FC = () => {
 
     return (
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 my-0 mx-0">
-            <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-lg shadow p-2">
+            <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
                 <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income for Employee Salary of ${formatNumber(salary)}</div>
-                <SankeyChart
-                    data={data1}
-                    chartKey={`sankey1-${salary}-${fedTax}-${stateTax}-${netIncome}`}
-                    options={options}
-                />
+                <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
+                    <SankeyChart
+                        data={createSankeyData(data1, labels1)}
+                        chartKey={`sankey1-${salary}-${fedTax}-${stateTax}-${netIncome}`}
+                        options={options}
+                    />
+                </div>
             </div>
-            <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-lg shadow p-2">
-                <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Adjustment to ${formatNumber(newIncome)}</div>
-                <SankeyChart
-                    data={data2}
-                    chartKey={`sankey2-${salary}-${employerSavings}-${adjustedFedTax}-${adjustedIncome}`}
-                    options={options}
-                />
+            <div className="w-full md:w-1/2 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
+                <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Salary Adjustment to ${formatNumber(newIncome)}</div>
+                <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
+                    <SankeyChart
+                        data={createSankeyData(data2, labels2)}
+                        chartKey={`sankey2-${salary}-${employerSavings}-${adjustedFedTax}-${adjustedIncome}`}
+                        options={options}
+                    />
+                </div>
             </div>
         </div>
     );
