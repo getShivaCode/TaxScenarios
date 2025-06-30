@@ -13,7 +13,14 @@ const Footer: React.FC = () => {
     >
       <div className="container mx-auto px-4 flex flex-col items-center">
         <span className="text-xs">
-          &copy; {new Date().getFullYear()} {stateNames[selectedState]} Tax Scenario Visualizer
+          &copy; {new Date().getFullYear()} {stateNames[selectedState]} Tax Scenario Visualizer{' '}
+          <a
+            href="mailto:ds2vconcoctions@gmail.com"
+            style={{ color: 'inherit', textDecoration: 'none', fontWeight: 'inherit' }}
+            className="inline"
+          >
+            by ds<sup>2</sup>v Concoctions
+          </a>
         </span>
         <span className="text-xs mt-2">
           IRS & {stateNames[selectedState]} State Tax Data, based on 2024 information from 
