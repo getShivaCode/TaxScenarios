@@ -64,7 +64,7 @@ const NarrationBox: React.FC<NarrationBoxProps> = ({ narration, visibleText }) =
         style={{ position: "relative", zIndex: 20, minWidth: 120 }}
       >
         <div className="flex gap-2 items-center">
-          <span className="font-semibold text-xs mr-1">Narrate</span>
+          <span className="font-semibold text-xs mr-1">Play Explanation</span>
           {!isPlaying && (
             <button
               onClick={startSpeech}
@@ -122,6 +122,13 @@ const NarrationBox: React.FC<NarrationBoxProps> = ({ narration, visibleText }) =
       }`}
       style={{ position: "relative", zIndex: 20 }}
     >
+      {/* Inject style for .shiv-highlight color based on dark mode */}
+      <style>{`
+        .shiv-highlight {
+          color: ${isDark ? '#c4b5fd' : '#7c3aed'};
+          transition: color 0.2s;
+        }
+      `}</style>
       <div className="flex items-center justify-between mb-2">
         <span className="font-semibold text-base">How does Save Honest Income's Value Act work?</span>
         <div className="flex gap-2 items-center">
@@ -171,7 +178,8 @@ const NarrationBox: React.FC<NarrationBoxProps> = ({ narration, visibleText }) =
         </div>
       </div>
       <div className="text-sm leading-relaxed whitespace-pre-line">
-        {visibleText || narration}
+        {/* Rendering narration as HTML is safe here because the content is trusted and not user-supplied */}
+        <span dangerouslySetInnerHTML={{ __html: visibleText || narration }} />
       </div>
     </div>
   );

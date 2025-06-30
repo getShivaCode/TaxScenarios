@@ -111,7 +111,7 @@ const Body: React.FC = () => {
       )}
       {/* Absolutely positioned narration box, always visible */}
       <div
-        className="fixed z-50 left-4 right-auto bottom-20 md:bottom-20 md:left-8 md:w-1/6 w-[90vw] max-w-md"
+        className="fixed z-50 left-4 right-auto bottom-20 md:bottom-20 md:left-4 md:w-1/6 w-[90vw] max-w-md"
         style={{ pointerEvents: 'auto' }}
       >
         <NarrationBox narration={mainPageNarration} visibleText={abridgedNarration} />
