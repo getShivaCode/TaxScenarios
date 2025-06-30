@@ -183,7 +183,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
       const stackedOptions = { ...options, maintainAspectRatio: false };
       return (
         <div className="flex flex-col gap-4 w-full">
-          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80">
+          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80">
             <div className={`font-semibold text-lg mb-4 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income for Employee Salary of ${formatNumber(salary)}</div>
             <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}> 
               <SankeyChart
@@ -194,7 +194,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
               />
             </div>
           </div>
-          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 pt-4 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80">
+          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 pt-4 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80">
             <div className={`font-semibold text-lg mb-4 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Adjustment to ${formatNumber(newIncome)}</div>
             <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}> 
               <SankeyChart
@@ -221,7 +221,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
             />
           </div>
         </div>
-        <div className="w-full md:w-1/2 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
+        <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
           <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Salary Adjustment to ${formatNumber(newIncome)}</div>
           <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
             <SankeyChart
