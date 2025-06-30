@@ -26,7 +26,23 @@ const Header: React.FC = () => {
         />
         <h1 className="text-xl font-bold ml-12 flex items-center">
           <span className="mr-4 flex items-center">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 36 36"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ cursor: 'pointer', outline: 'none' }}
+              tabIndex={0}
+              aria-label="Toggle Salary Analysis View"
+              className="focus:outline-none focus:ring-0 border-none"
+              onClick={() => (window as any).toggleAnalysisView && (window as any).toggleAnalysisView()}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  (window as any).toggleAnalysisView && (window as any).toggleAnalysisView();
+                }
+              }}
+            >
               <defs>
                 <linearGradient id="shiva-shield-gradient" x1="18" y1="3" x2="18" y2="33" gradientUnits="userSpaceOnUse">
                   <stop stopColor="#60a5fa"/>

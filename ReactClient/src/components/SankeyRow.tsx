@@ -3,26 +3,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 
 // SankeyController and Flow are registered globally in chartSetup.ts
-import { Chart } from "react-chartjs-2";
+import SankeyChart from './SankeyChart';
 
-type SankeyChartProps = {
-    data: any;
-    chartKey: string;
-    options: any;
+type SankeyRowProps = {
+  stacked?: boolean;
 };
 
-const SankeyChart: React.FC<SankeyChartProps> = ({ data, chartKey, options }) => (
-    <div className="mt-4">
-        <Chart
-            key={chartKey}
-            type={"sankey" as any}
-            data={data}
-            options={options}
-        />
-    </div>
-);
-
-const SankeyRow: React.FC = () => {
+const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
     const { currentAnnualSalary, filingStatus, caTaxAdjustmentPercent, selectedState, employerSavingsPercent } = useSelector(
         (state: RootState) => state.tax
     );
@@ -53,23 +40,12 @@ const SankeyRow: React.FC = () => {
     const newIncome = Math.round(scenario.newIncome);
     const adjustedIncome = Math.round(scenario.adjustedIncome);
     const adjustedFedTax = Math.round(scenario.adjustedFedTax);
-    //const caTaxImpact = Math.round(scenario.caTaxImpact);
+    const caTaxImpact = Math.round(scenario.caTaxImpact);
     const adjustedCaTax = Math.round(scenario.adjustedCaTax);
-
-    // --- Savings & Percentage Calculations for all 5 fields ---
-    // 1. Employee Salary Adjustment
-    const employeeSalaryChange = newIncome - salary;
 
     // 2. Federal Tax
     const fedTaxSavings = adjustedFedTax - fedTax;
-    const fedTaxSavingsPct = fedTax !== 0 ? (fedTaxSavings / fedTax) * 100 : 0;
-
-    // 3. State Tax
-    const stateTaxSavings = adjustedCaTax - stateTax;
-
-    // 4. Net Income
-    const netIncomeSavings = adjustedIncome - netIncome;
-    const netIncomeSavingsPct = netIncome !== 0 ? (netIncomeSavings / netIncome) * 100 : 0;
+    const employeeSavings = adjustedIncome - netIncome;
 
     // Helper to format numbers with commas
     const formatNumber = (num: number) => num.toLocaleString();
@@ -89,14 +65,18 @@ const SankeyRow: React.FC = () => {
     employeeCessLabel += `\n${selectedState} Income Tax Exempt`;
     
     var stateCessLabel = `${stateNames[selectedState]}: $${formatNumber(adjustedCaTax)}`;
-    if (stateTaxSavings) stateCessLabel += `\nGains $${formatNumber(Math.round(stateTaxSavings))}`;
+    if (caTaxImpact) stateCessLabel += `\nGains $${formatNumber(Math.round(caTaxImpact))}`;
 
     var irsCessLabel = `IRS: $${formatNumber(adjustedFedTax)}`;
     if (showFederalTaxImpact && fedTaxSavings) {
-        irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
+        if (!stacked) {
+          irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
+        } else {
+          irsCessLabel += ` (Impact $${formatNumber(Math.round(fedTaxSavings))})`;
+        }
     }
     var netIncomeCessLabel = `Net Income\n$${formatNumber(adjustedIncome)}`;
-    netIncomeCessLabel += `\nSaves $${formatNumber(Math.round(netIncomeSavings))} ( ${Math.round(netIncomeSavingsPct)}%)`;
+    netIncomeCessLabel += `\nSaves $${formatNumber(Math.round(employeeSavings))} ( ${((employeeSavings / netIncome) * 100).toFixed(2)}%)`;
 
     // Simple color map by node name
     const colors: Record<string, string> = {
@@ -136,7 +116,8 @@ const SankeyRow: React.FC = () => {
     // Factory function for Sankey data
     const createSankeyData = (
         data: Array<{ from: string; to: string; flow: number }>,
-        labels: Record<string, string>
+        labels: Record<string, string>,
+        nodePaddingOverride?: number
     ) => ({
         datasets: [
             {
@@ -148,7 +129,7 @@ const SankeyRow: React.FC = () => {
                 colorMode: 'to',
                 nodeWidth: 15,
                 borderWidth: 0,
-                nodePadding: 400,
+                nodePadding: nodePaddingOverride !== undefined ? nodePaddingOverride : 400,
                 alpha: darkMode?0.5:0.4, 
             }
         ],
@@ -197,29 +178,60 @@ const SankeyRow: React.FC = () => {
         );
     }
 
-    return (
-        <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 my-0 mx-0">
-            <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
-                <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income for Employee Salary of ${formatNumber(salary)}</div>
-                <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
-                    <SankeyChart
-                        data={createSankeyData(data1, labels1)}
-                        chartKey={`sankey1-${salary}-${fedTax}-${stateTax}-${netIncome}`}
-                        options={options}
-                    />
-                </div>
+    if (stacked) {
+      // Chart options for stacked mode: disable aspect ratio
+      const stackedOptions = { ...options, maintainAspectRatio: false };
+      return (
+        <div className="flex flex-col gap-4 w-full">
+          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80">
+            <div className={`font-semibold text-lg mb-4 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income for Employee Salary of ${formatNumber(salary)}</div>
+            <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}> 
+              <SankeyChart
+                data={createSankeyData(data1, labels1, 200)}
+                chartKey={`sankey1-${salary}-${fedTax}-${stateTax}-${netIncome}-${stacked ? 'stacked' : 'row'}`}
+                options={stackedOptions}
+                height={260}
+              />
             </div>
-            <div className="w-full md:w-1/2 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
-                <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Salary Adjustment to ${formatNumber(newIncome)}</div>
-                <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
-                    <SankeyChart
-                        data={createSankeyData(data2, labels2)}
-                        chartKey={`sankey2-${salary}-${employerSavings}-${adjustedFedTax}-${adjustedIncome}`}
-                        options={options}
-                    />
-                </div>
+          </div>
+          <div className="mt-0 mx-auto rounded-lg shadow relative z-10 w-full px-4 py-4 pt-4 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80">
+            <div className={`font-semibold text-lg mb-4 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Adjustment to ${formatNumber(newIncome)}</div>
+            <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}> 
+              <SankeyChart
+                data={createSankeyData(data2, labels2, 200)}
+                chartKey={`sankey2-${salary}-${employerSavings}-${adjustedFedTax}-${newIncome}-${stacked ? 'stacked' : 'row'}`}
+                options={stackedOptions}
+                height={260}
+              />
             </div>
+          </div>
         </div>
+      );
+    }
+    // Default: side-by-side row
+    return (
+      <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 my-0 mx-0">
+        <div className="w-full md:w-1/2 bg-white bg-opacity-80 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
+          <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income for Employee Salary of ${formatNumber(salary)}</div>
+          <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
+            <SankeyChart
+              data={createSankeyData(data1, labels1)}
+              chartKey={`sankey1-${salary}-${fedTax}-${stateTax}-${netIncome}-${stacked ? 'stacked' : 'row'}`}
+              options={options}
+            />
+          </div>
+        </div>
+        <div className="w-full md:w-1/2 bg-white bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-80 rounded-lg shadow p-2">
+          <div className={`font-semibold text-lg m-2 ${darkMode ? 'text-gray-100' : ''}`}>Distribution of Income after Salary Adjustment to ${formatNumber(newIncome)}</div>
+          <div className={`p-2 ${darkMode ? 'bg-white rounded-lg' : ''}`}>
+            <SankeyChart
+              data={createSankeyData(data2, labels2)}
+              chartKey={`sankey2-${salary}-${employerSavings}-${adjustedFedTax}-${adjustedIncome}-${stacked ? 'stacked' : 'row'}`}
+              options={options}
+            />
+          </div>
+        </div>
+      </div>
     );
 };
 
