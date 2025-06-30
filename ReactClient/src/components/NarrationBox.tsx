@@ -130,7 +130,7 @@ const NarrationBox: React.FC<NarrationBoxProps> = ({ narration, visibleText }) =
         }
       `}</style>
       <div className="flex items-center justify-between mb-2">
-        <span className="font-semibold text-base">How does Save Honest Income's Value Act work?</span>
+        <span className="font-semibold text-base">How does SHIVA work?</span>
         <div className="flex gap-2 items-center">
           {!isPlaying && (
             <button

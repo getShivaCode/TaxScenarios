@@ -14,7 +14,9 @@ Democrats get more revenue for their state.
 
 Republicans get to say they lowered taxes.
 
-You, the honest taxpayer, get to keep more of your hard-earned money.
+You, the honest taxpayer get to keep more of your hard-earned money.
+
+Employers get a break too.
 
 Let's walk through a scenario:
 
@@ -22,7 +24,7 @@ You make $300K a year. Without SHIVA, you're handing over $51K to the IRS and $1
 
 Now cue SHIVA.
 
-You restructure your comp to $281K, with the magic caveat that it's exempt from California state tax. Your employer pays that $18K as a state "cess" - a kind of employer-paid tribute - so it's not considered an employee benefit. Boom: you now take home $234.3K. That's an extra $4,300 in your pocket. Not too shabby for doing absolutely nothing differently.
+You restructure your comp to $281K, with the magic caveat that it's exempt from California state tax. Your employer pays that $18K as a state "cess" - a kind of employer-paid tribute - so it's not considered an employee benefit. Boom: you now take home $235K. That's an extra $4,300 in your pocket. Not too shabby for doing absolutely nothing differently.
 
 Want the State to get even more? Push the first slider to 10%. That means the state gets $1,800 extra from your employer. Your gain drops to $3,000, but hey - you're still ahead and the state is happy.
 
