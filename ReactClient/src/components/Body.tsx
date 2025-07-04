@@ -90,7 +90,7 @@ const Body: React.FC = () => {
                 <SalaryAnalysis />
               </div>
             </div>
-            <div className={`mt-0 mx-4 rounded-lg shadow relative z-10 w-80% px-4 py-4`}>
+            <div className="mt-0 mx-0 rounded-lg shadow relative z-10 w-full px-0 py-4">
               {/* Sankey charts row */}
               <SankeyRow />
             </div>
