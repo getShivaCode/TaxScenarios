@@ -53,14 +53,14 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
     const employeeLabel = `Employee\n\n$${formatNumber(salary)}`;
     const irsLabel = `IRS: $${formatNumber(fedTax)}`;
     const stateLabel = `${stateNames[selectedState]}: $${formatNumber(stateTax)}`;
-    const netIncomeLabel = `Net Income\n$${formatNumber(netIncome)}`;
+    const netIncomeLabel = `Net Income\n\n$${formatNumber(netIncome)}`;
 
     // Build node labels with values for Sankey 2
     var employerCessLabel = `Employer\n\n$${formatNumber(salary - employerSavings)}`;
-    if (employerSavings) employerCessLabel += `\nSaves $${formatNumber(Math.round(employerSavings))}`;
+    if (employerSavings) employerCessLabel += `\n\nSaves $${formatNumber(Math.round(employerSavings))}`;
 
-    var employeeCessLabel = `Employee $${formatNumber(newIncome)}`;
-    employeeCessLabel += `\n\n${selectedState} Income Tax Exempt`;
+    var employeeCessLabel = `Employee\n\n$${formatNumber(newIncome)}`;
+    employeeCessLabel += `\n\n${selectedState} Tax Exempt`;
     
     var stateCessLabel = `${stateNames[selectedState]}: $${formatNumber(adjustedCaTax)}`;
     if (caTaxImpact) stateCessLabel += `\n\nGains $${formatNumber(Math.round(caTaxImpact))}`;
@@ -69,7 +69,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
     if (showFederalTaxImpact && fedTaxSavings) {
       irsCessLabel += `\n\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
     }
-    var netIncomeCessLabel = `Net Income $${formatNumber(adjustedIncome)}`;
+    var netIncomeCessLabel = `Net Income\n\n$${formatNumber(adjustedIncome)}`;
     netIncomeCessLabel += `\n\nSaves $${formatNumber(Math.round(employeeSavings))} ( ${((employeeSavings / netIncome) * 100).toFixed(2)}%)`;
 
     // Sankey 1: Labels
