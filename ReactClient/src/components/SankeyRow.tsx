@@ -1,9 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-
-// SankeyController and Flow are registered globally in chartSetup.ts
-// import SankeyChart from './SankeyChart';
 import SankeyEChart from './SankeyEChart';
 
 type SankeyRowProps = {
@@ -63,18 +60,14 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
     if (employerSavings) employerCessLabel += `\nSaves $${formatNumber(Math.round(employerSavings))}`;
 
     var employeeCessLabel = `Employee\n$${formatNumber(newIncome)}`;
-    employeeCessLabel += `\n${selectedState} Income Tax Exempt`;
+    employeeCessLabel += `\n${selectedState} Income\nTax Exempt`;
     
     var stateCessLabel = `${stateNames[selectedState]}: $${formatNumber(adjustedCaTax)}`;
     if (caTaxImpact) stateCessLabel += `\nGains $${formatNumber(Math.round(caTaxImpact))}`;
 
     var irsCessLabel = `IRS: $${formatNumber(adjustedFedTax)}`;
     if (showFederalTaxImpact && fedTaxSavings) {
-        if (!stacked) {
-          irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
-        } else {
-          irsCessLabel += ` (Impact $${formatNumber(Math.round(fedTaxSavings))})`;
-        }
+      irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
     }
     var netIncomeCessLabel = `Net Income\n$${formatNumber(adjustedIncome)}`;
     netIncomeCessLabel += `\nSaves $${formatNumber(Math.round(employeeSavings))} ( ${((employeeSavings / netIncome) * 100).toFixed(2)}%)`;
@@ -143,11 +136,11 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
             <SankeyEChart
               data={{
                 nodes: [
-                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Employer'] } },
-                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Employee'] } },
-                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['IRS'] } },
-                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1[stateNames[selectedState]] } },
-                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Net Income'] } }
+                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels1['Employer'] } },
+                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels1['Employee'] } },
+                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels1['IRS'] } },
+                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels1[stateNames[selectedState]] } },
+                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels1['Net Income'] } }
                 ],
                 links: data1.map(({ from, to, flow }) => ({ source: from, target: to, value: flow }))
               }}
@@ -197,11 +190,11 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
             <SankeyEChart
               data={{
                 nodes: [
-                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Employer'] } },
-                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Employee'] } },
-                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['IRS'] } },
-                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2[stateNames[selectedState]] } },
-                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Net Income'] } }
+                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels2['Employer'] } },
+                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels2['Employee'] } },
+                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels2['IRS'] } },
+                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels2[stateNames[selectedState]] } },
+                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '0.8rem', formatter: labels2['Net Income'] } }
                 ],
                 links: data2.map(({ from, to, flow }) => ({ source: from, target: to, value: flow }))
               }}
