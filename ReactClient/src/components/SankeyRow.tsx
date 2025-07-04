@@ -143,11 +143,11 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
             <SankeyEChart
               data={{
                 nodes: [
-                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', formatter: labels1['Employer'] } },
-                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels1['Employee'] } },
-                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels1['IRS'] } },
-                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels1[stateNames[selectedState]] } },
-                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels1['Net Income'] } }
+                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Employer'] } },
+                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Employee'] } },
+                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['IRS'] } },
+                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1[stateNames[selectedState]] } },
+                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels1['Net Income'] } }
                 ],
                 links: data1.map(({ from, to, flow }) => ({ source: from, target: to, value: flow }))
               }}
@@ -187,6 +187,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
                   width: '100%',
                 }]
               }}
+              height={500}
             />
           </div>
         </div>
@@ -196,11 +197,11 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
             <SankeyEChart
               data={{
                 nodes: [
-                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', formatter: labels2['Employer'] } },
-                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels2['Employee'] } },
-                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels2['IRS'] } },
-                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels2[stateNames[selectedState]] } },
-                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', formatter: labels2['Net Income'] } }
+                  { name: 'Employer', itemStyle: { color: darkMode ? '#38bdf8' : 'blue' }, label: { position: 'right', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Employer'] } },
+                  { name: 'Employee', itemStyle: { color: darkMode ? '#a78bfa' : '#9366f1' }, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Employee'] } },
+                  { name: 'IRS', itemStyle: { color: darkMode ? '#dc2626' : 'red' }, y: 0, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['IRS'] } },
+                  { name: stateNames[selectedState], itemStyle: { color: darkMode ? '#facc15' : 'orange' }, y: 100, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2[stateNames[selectedState]] } },
+                  { name: 'Net Income', itemStyle: { color: darkMode ? '#a3e635' : '#1ade50' }, y: 200, label: { position: 'left', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', formatter: labels2['Net Income'] } }
                 ],
                 links: data2.map(({ from, to, flow }) => ({ source: from, target: to, value: flow }))
               }}
@@ -240,6 +241,7 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
                   width: '100%',
                 }]
               }}
+              height={500}
             />
           </div>
         </div>
