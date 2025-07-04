@@ -49,28 +49,28 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
     const formatNumber = (num: number) => num.toLocaleString();
 
     // Build node labels with values for Sankey 1
-    const employerLabel = `Employer\n$${formatNumber(salary)}`;
-    const employeeLabel = `Employee\n$${formatNumber(salary)}`;
+    const employerLabel = `Employer\n\n$${formatNumber(salary)}`;
+    const employeeLabel = `Employee\n\n$${formatNumber(salary)}`;
     const irsLabel = `IRS: $${formatNumber(fedTax)}`;
     const stateLabel = `${stateNames[selectedState]}: $${formatNumber(stateTax)}`;
     const netIncomeLabel = `Net Income\n$${formatNumber(netIncome)}`;
 
     // Build node labels with values for Sankey 2
-    var employerCessLabel = `Employer\n$${formatNumber(salary - employerSavings)}`;
+    var employerCessLabel = `Employer\n\n$${formatNumber(salary - employerSavings)}`;
     if (employerSavings) employerCessLabel += `\nSaves $${formatNumber(Math.round(employerSavings))}`;
 
-    var employeeCessLabel = `Employee\n$${formatNumber(newIncome)}`;
-    employeeCessLabel += `\n${selectedState} Income\nTax Exempt`;
+    var employeeCessLabel = `Employee $${formatNumber(newIncome)}`;
+    employeeCessLabel += `\n\n${selectedState} Income Tax Exempt`;
     
     var stateCessLabel = `${stateNames[selectedState]}: $${formatNumber(adjustedCaTax)}`;
-    if (caTaxImpact) stateCessLabel += `\nGains $${formatNumber(Math.round(caTaxImpact))}`;
+    if (caTaxImpact) stateCessLabel += `\n\nGains $${formatNumber(Math.round(caTaxImpact))}`;
 
     var irsCessLabel = `IRS: $${formatNumber(adjustedFedTax)}`;
     if (showFederalTaxImpact && fedTaxSavings) {
-      irsCessLabel += `\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
+      irsCessLabel += `\n\nImpact $${formatNumber(Math.round(fedTaxSavings))}`;
     }
-    var netIncomeCessLabel = `Net Income\n$${formatNumber(adjustedIncome)}`;
-    netIncomeCessLabel += `\nSaves $${formatNumber(Math.round(employeeSavings))} ( ${((employeeSavings / netIncome) * 100).toFixed(2)}%)`;
+    var netIncomeCessLabel = `Net Income $${formatNumber(adjustedIncome)}`;
+    netIncomeCessLabel += `\n\nSaves $${formatNumber(Math.round(employeeSavings))} ( ${((employeeSavings / netIncome) * 100).toFixed(2)}%)`;
 
     // Sankey 1: Labels
     const labels1 = {
@@ -150,12 +150,32 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
                   trigger: 'item',
                   triggerOn: 'mousemove',
                   formatter: function(params: any) {
-                    if (params.dataType === 'edge') {
+                    if (params.dataType === 'node') {
+                      // Show only the hovered node's label and value
+                      let label = params.name;
+                      let value = '';
+                      switch (label) {
+                        case 'Employer':
+                          value = labels1['Employer']; break;
+                        case 'Employee':
+                          value = labels1['Employee']; break;
+                        case 'IRS':
+                          value = labels1['IRS']; break;
+                        case stateNames[selectedState]:
+                          value = labels1[stateNames[selectedState]]; break;
+                        case 'Net Income':
+                          value = labels1['Net Income']; break;
+                        default:
+                          value = label;
+                      }
+                      // Only show the main $ amount for each node (first $... in the label)
+                      const dollarMatch = value.match(/\$[\d,]+/);
+                      if (dollarMatch) {
+                        return `${label}: ${dollarMatch[0]}`;
+                      }
+                      return label;
+                    } else if (params.dataType === 'edge') {
                       return `${params.data.source} → ${params.data.target} : $${params.data.value.toLocaleString()}`;
-                    } else if (params.dataType === 'node') {
-                      return params.data.value !== undefined
-                        ? `${params.data.name}: $${params.data.value.toLocaleString()}`
-                        : params.data.name;
                     }
                     return '';
                   }
@@ -204,12 +224,32 @@ const SankeyRow: React.FC<SankeyRowProps> = ({ stacked }) => {
                   trigger: 'item',
                   triggerOn: 'mousemove',
                   formatter: function(params: any) {
-                    if (params.dataType === 'edge') {
+                    if (params.dataType === 'node') {
+                      // Show only the hovered node's label and value
+                      let label = params.name;
+                      let value = '';
+                      switch (label) {
+                        case 'Employer':
+                          value = labels2['Employer']; break;
+                        case 'Employee':
+                          value = labels2['Employee']; break;
+                        case 'IRS':
+                          value = labels2['IRS']; break;
+                        case stateNames[selectedState]:
+                          value = labels2[stateNames[selectedState]]; break;
+                        case 'Net Income':
+                          value = labels2['Net Income']; break;
+                        default:
+                          value = label;
+                      }
+                      // Only show the main $ amount for each node (first $... in the label)
+                      const dollarMatch = value.match(/\$[\d,]+/);
+                      if (dollarMatch) {
+                        return `${label}: ${dollarMatch[0]}`;
+                      }
+                      return label;
+                    } else if (params.dataType === 'edge') {
                       return `${params.data.source} → ${params.data.target} : $${params.data.value.toLocaleString()}`;
-                    } else if (params.dataType === 'node') {
-                      return params.data.value !== undefined
-                        ? `${params.data.name}: $${params.data.value.toLocaleString()}`
-                        : params.data.name;
                     }
                     return '';
                   }
