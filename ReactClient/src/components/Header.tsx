@@ -84,7 +84,7 @@ const Header: React.FC = () => {
           </span>
         </h1>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 mr-8">
         <button
           onClick={() => dispatch(toggleDarkMode())}
           className={`p-2 rounded-full focus:outline-none focus:ring-2 ${darkMode ? "hover:bg-blue-700 focus:ring-blue-500" : "hover:bg-sky-700 focus:ring-sky-500"}`}
